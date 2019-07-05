@@ -1,4 +1,4 @@
-"""tutorial URL Configuration
+"""tutorial1 URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/2.2/topics/http/urls/
@@ -13,17 +13,17 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.urls import include, path
-from rest_framework import routers
-from tutorial.quickstart import views
+from django.conf.urls import include, url
+from rest_framework.schemas import get_schema_view
+from rest_framework.documentation import include_docs_urls
 
-router = routers.DefaultRouter()
-router.register(r'users', views.UserViewSet)
-router.register(r'groups', views.GroupViewSet)
+API_TITLE = 'Pastebin API'
+API_DESCRIPTION = 'A Web API for creating and viewing highlighted code snippets.'
+schema_view = get_schema_view(title=API_TITLE)
 
-# Wire up our API using automatic URL routing.
-# Additionally, we include login URLs for the browsable API.
 urlpatterns = [
-    path('', include(router.urls)),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    url(r'^', include('snippets.urls')),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^schema/$', schema_view),
+    url(r'^docs/', include_docs_urls(title=API_TITLE, description=API_DESCRIPTION))
 ]
